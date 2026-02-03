@@ -18,8 +18,8 @@ def bellman_ford(graph, start):
 
     # Inicializa distancias y predecesores
     # V = número de vértices
-    dist = {v: float("inf") for v in range(graph.V)}  # O(V)
-    prev = {v: None for v in range(graph.V)}           # O(V)
+    dist = {v: float("inf") for v in range(graph.V)} #O(v)
+    prev = {v: None for v in range(graph.V)} #O(v)
 
     dist[start] = 0  # O(1)
 
@@ -28,7 +28,7 @@ def bellman_ford(graph, start):
         for u in range(graph.V):                      # O(V)
             for v, w in graph.adj[u]:                 # O(E total sobre todos los nodos)
                 if dist[u] != float("inf") and dist[u] + w < dist[v]:
-                    dist[v] = dist[u]                 # O(1)
+                    dist[v] = dist[u] + w               # O(1)
                     prev[v] = u                        # O(1)
 
     # Verificación de ciclos negativos
