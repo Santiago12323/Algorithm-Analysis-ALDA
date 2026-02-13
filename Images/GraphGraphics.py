@@ -82,7 +82,6 @@ def get_graph_cases():
         "edges": edges_sparse
     }
 
-    # CASO 5: Grafo denso
     edges_dense = []
     for u in range(20):
         for v in range(20):
