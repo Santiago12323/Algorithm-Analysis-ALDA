@@ -3,20 +3,20 @@ from collections import deque
 
 def dag_shortest_path(graph, start):
     """
-    Camino mínimo en DAG (Directed Acyclic Graph)
+    Shortest Path in a DAG (Directed Acyclic Graph)
 
-    Notación:
-    - V: número de vértices
-    - E: número de aristas
+    Notation:
+    - V: number of vertices
+    - E: number of edges
 
-    Complejidad temporal:
-    - Orden topológico: O(V + E)
-    - Relajación de aristas: O(E)
-    - Complejidad total: O(V + E)
-    - aproximadamente O(2n)
+    Time complexity:
+    - Topological sort: O(V + E)
+    - Edge relaxation: O(E)
+    - Total complexity: O(V + E)
+    - Approximately O(2n)
 
-    Complejidad espacial:
-    - Distancias + predecesores + indegree: O(V)
+    Space complexity:
+    - Distances + predecessors + indegree: O(V)
     """
 
     V = graph.V  # O(1)
@@ -28,7 +28,7 @@ def dag_shortest_path(graph, start):
             indegree[v] += 1             # O(1)
 
     # ==========================
-    # 2. Orden topológico (Kahn)
+    # 2. Topological Sort (Kahn's Algorithm)
     # ==========================
     q = deque()
     for v in range(V):                   # O(V)
@@ -45,14 +45,14 @@ def dag_shortest_path(graph, start):
                 q.append(v)
 
     # ==========================
-    # 3. Inicializar distancias
+    # 3. Initialize distances
     # ==========================
     dist = {v: float("inf") for v in range(V)}  # O(V)
     prev = {v: None for v in range(V)}          # O(V)
     dist[start] = 0                             # O(1)
 
     # ==========================
-    # 4. Relajación de aristas
+    # 4. Edge Relaxation
     # ==========================
     for u in topo:                       # O(V)
         if dist[u] != float("inf"):

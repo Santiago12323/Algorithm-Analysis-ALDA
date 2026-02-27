@@ -4,54 +4,54 @@ from structures.graph import Graph
 
 def johnson(g: Graph):
     """
-    Algoritmo de Johnson
+    Johnson's Algorithm
 
-    Notación:
-    - V: número de vértices del grafo
-    - E: número de aristas del grafo
+    Notation:
+    - V: number of vertices in the graph
+    - E: number of edges in the graph
 
-    Caso normal (grafo disperso):
-    - Bellman-Ford se ejecuta una sola vez: O(V * E)
-    - Dijkstra se ejecuta V veces: O(V * (V + E) log V)
-    - Complejidad total dominante:
+    Normal case (sparse graph):
+    - Bellman-Ford runs once: O(V * E)
+    - Dijkstra runs V times: O(V * (V + E) log V)
+    - Dominant total complexity:
         O(V * E + V * (V + E) log V) = O(V · E log V)
 
-    Caso especial (grafo muy denso):
+    Special case (very dense graph):
     - E ≈ V^2
-    - Complejidad aproximada:
+    - Approximate complexity:
         O(V^3 log V)
 
-    Complejidad espacial:
-    - Almacena distancias para todos los pares de nodos: O(V^2)
-    - Grafos auxiliares y estructuras: O(V + E)
-    - Complejidad espacial total: O(V^2)
+    Space complexity:
+    - Stores distances for all pairs of nodes: O(V^2)
+    - Auxiliary graphs and structures: O(V + E)
+    - Total space complexity: O(V^2)
     """
 
     V = g.V  # O(1)
 
     g_ext = Graph(V + 1, directed=True)  # O(V)
 
-
+    # Copy original edges into extended graph
     for u in range(V):                   # O(V)
         for v, w in g.adj[u]:            # O(E)
             g_ext.add_edge(u, v, w)      # O(1)
 
-    # Nodo ficticio q conectado a todos los nodos
+    # Add artificial node q connected to all nodes
     q = V
     for v in range(V):                   # O(V)
         g_ext.add_edge(q, v, 0)          # O(1)
 
     # ==========================
-    # Bellman-Ford desde q
+    # Bellman-Ford from q
     # ==========================
-    # Complejidad temporal: O(V * E)
-    # Complejidad espacial: O(V)
+    # Time complexity: O(V * E)
+    # Space complexity: O(V)
     h, _ = bellman_ford(g_ext, q)
 
     # ==========================
-    # Reponderar aristas
+    # Reweight edges
     # ==========================
-    # Se crea un nuevo grafo con pesos no negativos
+    # Create new graph with non-negative weights
     g_rw = Graph(V, directed=True)        # O(V)
 
     for u in range(V):                   # O(V)
@@ -60,14 +60,14 @@ def johnson(g: Graph):
             g_rw.add_edge(u, v, w_new)   # O(1)
 
     # ==========================
-    # Dijkstra desde cada nodo
+    # Run Dijkstra from each node
     # ==========================
-    dist = {}    # Diccionario de distancias finales
-    prev = {}    # Diccionario de predecesores
+    dist = {}    # Final distance dictionary
+    prev = {}    # Predecessor dictionary
 
     for u in range(V):                   # O(V)
 
-        # Complejidad: O((V + E) log V)
+        # Complexity: O((V + E) log V)
         d_rw, p = dijkstra(g_rw, u)
 
         dist[u] = {}
@@ -80,18 +80,18 @@ def johnson(g: Graph):
                 dist[u][v] = float("inf")
 
     # ==========================
-    # Análisis final:
+    # Final Analysis:
     # ==========================
-    # - Crear grafos auxiliares: O(V + E)
+    # - Create auxiliary graphs: O(V + E)
     # - Bellman-Ford: O(V * E)
-    # - Dijkstra V veces: O(V * (V + E) log V)
-    # - Ajuste final de distancias: O(V^2)
+    # - Dijkstra V times: O(V * (V + E) log V)
+    # - Final distance adjustment: O(V^2)
     #
-    # Complejidad temporal total dominante:
+    # Dominant total time complexity:
     #   O(V * E + V * (V + E) log V)
-    # aproximadamente = O(3n ^ 2)
+    # approximately = O(3n^2) in simplified terms
     #
-    # Complejidad espacial total:
+    # Total space complexity:
     #   O(V^2)
     # ==========================
 

@@ -2,38 +2,38 @@ import heapq
 
 def dijkstra(graph, start):
     """
-    Dijkstra
-    Complejidad temporal total: O((V + E) log V)
-    Complejidad espacial total: O(V^2 log V)
+    Dijkstra's Algorithm
+
+    Total time complexity: O((V + E) log V)
+    Total space complexity: O(V)
     """
 
-    # Diccionario de distancias para todos los vértices
-    # Recorre V vértices
+    # Distance dictionary for all vertices
+    # Iterates over V vertices
     dist = {v: float("inf") for v in range(graph.V)}  # O(V)
 
-
-    # Diccionario de predecesores para reconstruir el camino
-    # Recorre V vértices
+    # Predecessor dictionary to reconstruct the path
+    # Iterates over V vertices
     prev = {v: None for v in range(graph.V)}  # O(V)
 
     dist[start] = 0  # O(1)
 
-    # Cola de prioridad
+    # Priority queue (min-heap)
     pq = [(0, start)]  # O(1)
 
-    # El while puede ejecutarse hasta O(E)
-    # E siendo el número de aristas
+    # The while loop can execute up to O(E) times
+    # E = number of edges
     while pq:  # O(E)
 
-        # Extracción del mínimo del heap
+        # Extract minimum from heap
         current_dist, u = heapq.heappop(pq)  # O(log V)
 
         if current_dist > dist[u]:  # O(1)
             continue
 
-        # Recorre los vecinos del nodo u
-        # El ciclo depende de las aristas del nodo u
-        for v, w in graph.adj[u]:  # O(grado(u))
+        # Traverse neighbors of node u
+        # Loop depends on the edges of node u
+        for v, w in graph.adj[u]:  # O(degree(u))
 
             alt = dist[u] + w  # O(1)
             if alt < dist[v]:  # O(1)
@@ -43,26 +43,25 @@ def dijkstra(graph, start):
 
                 heapq.heappush(pq, (alt, v))  # O(log V)
 
-    # Análisis final:
-    # Caso normal (grafo no tan lleno):
-    # - Inicializa distancias y predecesores: O(V)
-    # - Recorre todas las conexiones entre nodos: O(E)
-    # - Cada vez que actualiza un camino usa la cola de prioridad: O(E log V)
-    # - Complejidad total dominante: O((V + E) log V)
-    # - osea O(n) log(n)
+    # Final analysis:
+    # Normal case (graph not very dense):
+    # - Initialize distances and predecessors: O(V)
+    # - Traverse all connections between nodes: O(E)
+    # - Each path update uses the priority queue: O(E log V)
+    # - Dominant total complexity: O((V + E) log V)
+    # - That is O(n log n) in simplified terms
 
-    # Caso especial (grafo muy lleno, casi todas las conexiones presentes):
-    # - Como hay muchas conexiones (E ≈ V^2), el tiempo se aproxima a O(V^2 log V)
-
+    # Special case (very dense graph, almost all connections present):
+    # - Since there are many connections (E ≈ V^2),
+    #   time complexity approaches O(V^2 log V)
 
     return dist, prev
 
 
-
 def get_shortest_path(prev, start, end):
     """
-    Reconstruye el camino más corto usando el arreglo de predecesores
-    Complejidad temporal: O(V)
+    Reconstructs the shortest path using the predecessor array
+    Time complexity: O(V)
     """
     path = []
     cur = end

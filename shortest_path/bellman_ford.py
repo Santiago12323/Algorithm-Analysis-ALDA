@@ -1,65 +1,64 @@
 def bellman_ford(graph, start):
     """
-    Bellman-Ford
+    Bellman-Ford Algorithm
 
-    Caso normal (grafo no muy lleno):
-    - Inicializa distancias y predecesores: O(V)
-    - Recorre cada nodo y todas sus aristas V-1 veces: O(V * E)
-    - Verifica ciclos negativos: O(V * E)
-    - Complejidad total dominante: O(V * E)
-    - en general O(n^2)
+    Normal case (not very dense graph):
+    - Initialize distances and predecessors: O(V)
+    - Iterate over every node and its edges V-1 times: O(V * E)
+    - Check for negative cycles: O(V * E)
+    - Total dominant complexity: O(V * E)
+    - In general: O(n^2)
 
-    Caso especial (grafo muy lleno, casi todas las conexiones presentes):
-    - Número de aristas E ≈ V^2
-    - Complejidad total aproximada: O(V^3)
+    Special case (very dense graph, almost all connections present):
+    - Number of edges E ≈ V^2
+    - Total approximate complexity: O(V^3)
 
-    Complejidad espacial: O(V)
+    Space complexity: O(V)
     """
 
-    # Inicializa distancias y predecesores
-    # V = número de vértices
-    dist = {v: float("inf") for v in range(graph.V)} #O(v)
-    prev = {v: None for v in range(graph.V)} #O(v)
+    # Initialize distances and predecessors
+    # V = number of vertices
+    dist = {v: float("inf") for v in range(graph.V)}  # O(V)
+    prev = {v: None for v in range(graph.V)}          # O(V)
 
     dist[start] = 0  # O(1)
 
-    # Paso principal: actualizar caminos V-1 veces
+    # Main step: relax edges V-1 times
     for _ in range(graph.V - 1):                      # O(V)
         for u in range(graph.V):                      # O(V)
-            for v, w in graph.adj[u]:                 # O(E total sobre todos los nodos)
+            for v, w in graph.adj[u]:                 # O(E total across all nodes)
                 if dist[u] != float("inf") and dist[u] + w < dist[v]:
-                    dist[v] = dist[u] + w               # O(1)
-                    prev[v] = u                        # O(1)
+                    dist[v] = dist[u] + w             # O(1)
+                    prev[v] = u                       # O(1)
 
-    # Verificación de ciclos negativos
+    # Negative cycle detection
     for u in range(graph.V):                          # O(V)
         for v, w in graph.adj[u]:                     # O(E)
             if dist[u] != float("inf") and dist[u] + w < dist[v]:
-                raise ValueError("El grafo contiene un ciclo de peso negativo")
+                raise ValueError("The graph contains a negative weight cycle")
 
     # -------------------------
-    # Análisis paso a paso:
-    # 1. Inicialización de distancias y predecesores: O(V) + O(V) = O(V)
-    # 2. Bucles principales:
-    #    - Repetición V-1 veces: O(V)
-    #    - Recorre todos los nodos: O(V)
-    #    - Recorre todas las aristas de cada nodo: O(E)
-    #    → Total bucles = O(V) * O(E) = O(V * E)
-    # 3. Verificación de ciclos negativos: O(V * E)
-    # total = O(V * E)
-    # general = O(n^2)
+    # Step-by-step analysis:
+    # 1. Distance and predecessor initialization: O(V) + O(V) = O(V)
+    # 2. Main loops:
+    #    - Repeat V-1 times: O(V)
+    #    - Traverse all nodes: O(V)
+    #    - Traverse all edges of each node: O(E)
+    #    → Total loops = O(V) * O(E) = O(V * E)
+    # 3. Negative cycle check: O(V * E)
+    # Total = O(V * E)
+    # General = O(n^2)
     # -------------------------
-    # Caso normal: grafos dispersos → E << V^2 → O(V * E)
-    # Caso especial: grafos densos → E ≈ V^2 → O(V^3)
+    # Normal case: sparse graphs → E << V^2 → O(V * E)
+    # Special case: dense graphs → E ≈ V^2 → O(V^3)
 
     return dist, prev
 
 
-
 def get_shortest_path(prev, start, end):
     """
-    Reconstruye el camino más corto
-    Complejidad temporal: O(V)
+    Reconstructs the shortest path
+    Time complexity: O(V)
     """
     path = []
     cur = end
